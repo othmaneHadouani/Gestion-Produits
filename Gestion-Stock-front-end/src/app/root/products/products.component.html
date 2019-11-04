@@ -1,0 +1,53 @@
+<div class="row mt-5">
+  <div class="col-4 ">
+    <form class="navbar-form navbar-left" #f="ngForm" (ngSubmit)="doSearch(f.value)">
+      <div class="row">
+        <div class="form-group col-8">
+          <input type="text" class="form-control" name="motCle" #motCle="ngModel" ngModel placeholder="Search">
+        </div>
+        <div class="col-4 pr-0">
+          <button type="submit" class="btn btn-default">Chercher</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="card car mt-3">
+  <div class="card-header text-center "><h6> Produits </h6></div>
+  <div class="panel-body">
+    <table class="table">
+      <thead >
+      <tr class="d-flex">
+        <th scope="col"  class="col">Name</th>
+        <th scope="col" class="col">Description</th>
+        <th scope="col" class="col">Current Price</th>
+        <th scope="col" class="col">Available</th>
+        <th scope="col" class="col">Quantity</th>
+        <th scope="col" class="col">Category</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let p of this.catService.products" class="d-flex">
+        <td class="col">{{p.name}}</td>
+        <td class="col">{{p.description}}</td>
+        <td class="col">{{p.currentPrice}}</td>
+        <td class="col">{{!p.avilable?'Oui':'Non'}}</td>
+        <td class="col">{{p.quantity}}</td>
+        <td class="col">{{p.category.name}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="ml-5">
+      <nav>
+        <ul class="pagination">
+          <li [style.display]="this.catService.aboutProducts?.pageable.pageNumber == 0 ? 'none' : 'inline'"><a aria-label="Previous " class="page-link clickable" (click)="this.getPage(motCle,(i-1))" ><< Previous</a></li>
+          <li *ngFor="let item of [].constructor(this.catService.aboutProducts?.totalPages); let i = index " class="page-item" [ngClass]="{'active' : this.catService.aboutProducts?.pageable.pageNumber==i}">
+
+            <a class="page-link clickable"  (click)="this.getPage(motCle,i)" > {{i}} </a>
+          </li>
+          <li [style.display]="this.catService.aboutProducts?.pageable.pageNumber == (this.catService.aboutProducts?.totalPages-1) ? 'none' : 'inline'"><a class="page-link clickable" aria-label="Previous" (click)="this.getPage(motCle,(i+1))"> Next >></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,211 @@
+
+
+<div class="row mt-5">
+  <div class="col-3">
+    <button class="btn btn-lg btn-outline-primary " (click)="openAdd(addProduct)">Ajouter Un produit</button>
+  </div>
+  <div class="col-4 ">
+    <form class="navbar-form navbar-left" #f="ngForm" (ngSubmit)="doSearch(f.value)">
+       <div class="row">
+         <div class="form-group col-8">
+           <input type="text" class="form-control" name="motCle" #motCle="ngModel" ngModel placeholder="Search">
+         </div>
+         <div class="col-4 pr-0">
+           <button type="submit" class="btn btn-default">Chercher</button>
+         </div>
+       </div>
+    </form>
+  </div>
+</div>
+<div class="card car mt-3">
+  <div class="card-header text-center "><h6> Produits </h6></div>
+  <div class="panel-body">
+    <table class="table">
+      <thead >
+      <tr class="d-flex">
+        <th scope="col"  class="col-1">Name</th>
+        <th scope="col" class="col-2">Description</th>
+        <th scope="col" class="col-2">Current Price</th>
+        <th scope="col" class="col-2">Available</th>
+        <th scope="col" class="col-1">Quantity</th>
+        <th scope="col" class="col-2">Category</th>
+        <th scope="col" class="col-2"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let p of this.catService.products" class="d-flex">
+        <td class="col-1">{{p.name}}</td>
+        <td class="col-2">{{p.description}}</td>
+        <td class="col-2">{{p.currentPrice}}</td>
+        <td class="col-2">{{!p.avilable?'Oui':'Non'}}</td>
+        <td class="col-1">{{p.quantity}}</td>
+        <td class="col-2">{{p.category.name}}</td>
+        <td class="col-2">
+          <button type="button" (click)="openDelete(deleteProduct,p.id)" class="btn btn-primary" style="margin-right: 10px">Delete</button>
+          <button type="button" class="btn btn-primary" (click)="openEdit(editProduct,p)">Edit</button>
+
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="ml-5">
+      <nav>
+        <ul class="pagination">
+          <li [style.display]="this.catService.aboutProducts?.pageable.pageNumber == 0 ? 'none' : 'inline'"><a aria-label="Previous " class="page-link clickable" (click)="this.getPage(motCle,(i-1))" ><< Previous</a></li>
+          <li *ngFor="let item of [].constructor(this.catService.aboutProducts?.totalPages); let i = index " class="page-item" [ngClass]="{'active' : this.catService.aboutProducts?.pageable.pageNumber==i}">
+
+            <a class="page-link clickable"  (click)="this.getPage(motCle,i)" > {{i}} </a>
+          </li>
+          <li [style.display]="this.catService.aboutProducts?.pageable.pageNumber == (this.catService.aboutProducts?.totalPages-1) ? 'none' : 'inline'"><a class="page-link clickable" aria-label="Previous" (click)="this.getPage(motCle,(i+1))"> Next >></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #addProduct let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title text-center" id="modal-basic-title">Nouveau Produit</h6>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form  #formProduct="ngForm">
+      <div class="form-group">
+        <label >Name</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer Le nom du Produit" name="name" [(ngModel)]="this.product.name" required>
+        </div>
+        <span class="help-block" *ngIf="formProduct.controls?.name?.errors?.required && formProduct.controls?.name?.touched">Veuillez inserer un Nom valide.</span>
+      </div>
+
+      <div class="form-group">
+        <label >Description</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer La description du Produit" name="description" [(ngModel)]="this.product.description" required>
+        </div>
+        <span class="help-block" *ngIf="formProduct.controls?.description?.errors?.required && formProduct.controls?.description?.touched">Veuillez inserer une description valide.</span>
+      </div>
+
+      <div class="form-group">
+        <label >Prix</label>
+        <div class="input-group">
+          <input type="number"  class="form-control" placeholder="Entrer Le prix du Produit" name="currentPrice" [(ngModel)]="this.product.currentPrice" required>
+        </div>
+        <span class="help-block" *ngIf="formProduct.controls?.currentPrice?.errors?.required && formProduct.controls?.currentPrice?.touched">Veuillez inserer une Quantité valide.</span>
+      </div>
+
+      <div class="form-group">
+        <label >Quantity</label>
+        <div class="input-group">
+          <input type="number"  class="form-control" placeholder="Entrer La Quantité du Produit" name="quantity" [(ngModel)]="this.product.quantity" required>
+        </div>
+        <span class="help-block" *ngIf="formProduct.controls?.quantity?.errors?.required && formProduct.controls?.quantity?.touched">Veuillez inserer une Quantité valide.</span>
+
+      </div>
+
+      <div class="form-group">
+        <label >Categorie</label>
+        <div class="input-group">
+          <select class="form-control" name="category" [(ngModel)]="this.product.category" required>
+            <option value="">-- Veuillez choisir une catégorie --</option>
+            <option *ngFor="let c of this.catService.listCategories"  [ngValue]="c">{{c.name}}</option>
+          </select>
+        </div>
+        <span class="help-block" *ngIf="formProduct.controls?.idCategorie?.errors?.required && formProduct.controls?.idCategorie?.touched">Veuillez choisir une catégorie.</span>
+
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()" [disabled]="!formProduct.valid">Save</button>
+  </div>
+</ng-template>
+
+<ng-template #editProduct let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title text-center">Modifier Produit</h6>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form  #formProduct="ngForm">
+
+      <div class="form-group">
+        <label >Id </label>
+        <div class="input-group">
+          <input type="text" readonly class="form-control"  name="id" [(ngModel)]="this.product.id" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label >Name</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer Le nom du Produit" name="name" [(ngModel)]="this.product.name" required>
+        </div>
+        <span class="help-block" *ngIf="formProduct.controls?.name?.errors?.required && formProduct.controls?.name?.touched">Veuillez inserer un Nom valide.</span>
+      </div>
+
+      <div class="form-group">
+        <label >Description</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer La description du Produit" name="description" [(ngModel)]="this.product.description" required>
+        </div>
+        <span class="help-block" *ngIf="formProduct.controls?.description?.errors?.required && formProduct.controls?.description?.touched">Veuillez inserer une description valide.</span>
+      </div>
+
+      <div class="form-group">
+        <label >Prix</label>
+        <div class="input-group">
+          <input type="number"  class="form-control" placeholder="Entrer Le prix du Produit" name="currentPrice" [(ngModel)]="this.product.currentPrice" required>
+        </div>
+        <span class="help-block" *ngIf="formProduct.controls?.currentPrice?.errors?.required && formProduct.controls?.currentPrice?.touched">Veuillez inserer une Quantité valide.</span>
+      </div>
+
+      <div class="form-group">
+        <label >Quantity</label>
+        <div class="input-group">
+          <input type="number"  class="form-control" placeholder="Entrer La Quantité du Produit" name="quantity" [(ngModel)]="this.product.quantity" required>
+        </div>
+        <span class="help-block" *ngIf="formProduct.controls?.quantity?.errors?.required && formProduct.controls?.quantity?.touched">Veuillez inserer une Quantité valide.</span>
+
+      </div>
+
+        <div class="form-group">
+          <label >Categorie</label>
+          <div class="input-group">
+            <select class="form-control" name="category" [(ngModel)]="this.product.category" required>
+              <option value="">-- Veuillez choisir une catégorie--</option>
+              <option *ngFor="let c of this.catService.listCategories"  [ngValue]="c">{{c.name}}</option>
+            </select>
+          </div>
+          <span class="help-block" *ngIf="formProduct.controls?.idCategorie?.errors?.required && formProduct.controls?.idCategorie?.touched">Veuillez choisir une catégorie.</span>
+        </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()" [disabled]="!formProduct.valid">Modifier</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteProduct let-modal>
+<div class="modal-header">
+  <h4 class="modal-title text-center">Ete vous Sur !!!</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-success" (click)="modal.close()">Oui</button>
+  <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Non</button>
+</div>
+</ng-template>

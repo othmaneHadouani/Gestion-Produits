@@ -1,0 +1,128 @@
+
+<div class="row mt-5">
+  <div class="col-3">
+    <button class="btn btn-lg btn-outline-primary " (click)="openAdd(addUser)">Ajouter Un Utilisateur</button>
+  </div>
+  <div class="col-4 ">
+    <form class="navbar-form navbar-left" #f="ngForm" (ngSubmit)="doSearch(f.value)">
+      <div class="row">
+        <div class="form-group col-8">
+          <input type="text" class="form-control" name="motCle" #motCle="ngModel" ngModel placeholder="Search">
+        </div>
+        <div class="col-4 pr-0">
+          <button type="submit" class="btn btn-default">Chercher</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card car mt-3">
+  <div class="card-header text-center "><h6> Utilisateurs </h6></div>
+  <div class="panel-body">
+    <table class="table">
+      <thead >
+      <tr class="d-flex">
+        <th scope="col"  class="col-2"></th>
+        <th scope="col"  class="col-3">Username</th>
+        <th scope="col" class="col-5">Roles</th>
+        <th scope="col" class="col-2"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let u of this.authService.users" class="d-flex">
+        <td class="col-2"></td>
+        <td class="col-3">{{u.username}}</td>
+        <td class="col-5"><span *ngFor="let r of u.roles">{{r.roleName}} </span></td>
+        <td class="col-2">
+          <button type="button" (click)="openDelete(deleteUser,u.username)" class="btn btn-primary" style="margin-right: 10px">Delete</button>
+          <button type="button" class="btn btn-primary" (click)="openEdit(editUser,p)">Edit</button>
+
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="ml-5">
+      <nav>
+        <ul class="pagination">
+          <li [style.display]="this.authService.aboutUsers?.pageable.pageNumber == 0 ? 'none' : 'inline'"><a aria-label="Previous " class="page-link clickable" (click)="this.getPage(motCle,i-1)" ><< Previous</a></li>
+          <li *ngFor="let item of [].constructor(this.authService.aboutUsers?.totalPages); let i = index " class="page-item" [ngClass]="{'active' : this.authService.aboutUsers?.pageable.pageNumber==i}">
+
+            <a class="page-link clickable"  (click)="this.getPage(motCle,i)" > {{i}} </a>
+          </li>
+          <li [style.display]="this.authService.aboutUsers?.pageable.pageNumber == (this.authService.aboutUsers?.totalPages-1) ? 'none' : 'inline'"><a class="page-link clickable" aria-label="Previous" (click)="this.getPage(motCle,i+1)"> Next >></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #addUser let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title text-center" id="modal-basic-title">Nouveau Utilisateur</h6>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form  #formUser="ngForm">
+      <div class="form-group">
+        <label >Username</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer Un Username" name="username" [(ngModel)]="this.user.username" required>
+        </div>
+        <span class="help-block" *ngIf="formUser.controls?.username?.errors?.required && formUser.controls?.username?.touched">Veuillez inserer un UserName valide.</span>
+      </div>
+
+      <div class="form-group">
+        <label >Password</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer un Password" name="password" [(ngModel)]="this.user.password" required>
+        </div>
+        <span class="help-block" *ngIf="formUser.controls?.password?.errors?.required && formUser.controls?.password?.touched">Veuillez inserer un Paasword valide.</span>
+      </div>
+
+
+      <div class="form-group">
+        <label >Confirmation Password</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Confirmaer Le Password" name="confirmedPassword" [(ngModel)]="this.user.confirmedPassword" required>
+        </div>
+        <span class="help-block" *ngIf="formUser.controls?.confirmedPassword?.errors?.required && formUser.controls?.confirmedPassword?.touched">Veuillez confirmaer le Paasword valide.</span>
+      </div>
+
+      <div class="form-check-inline">
+        <label class="form-check-label" >
+          <input type="radio" class="form-check-input"   name="actived" value="true" checked>Option 1
+        </label>
+      </div>
+      <div class="form-check-inline">
+        <label class="form-check-label" >
+          <input type="radio" class="form-check-input"  name="actived" value="false">Option 2
+        </label>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()" [disabled]="!formUser.valid">Save</button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #deleteUser let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title text-center">Ete vous Sur !!!</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="modal.close()">Oui</button>
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Non</button>
+  </div>
+</ng-template>

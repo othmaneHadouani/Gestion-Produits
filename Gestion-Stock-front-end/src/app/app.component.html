@@ -1,0 +1,62 @@
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+
+  <div class="container-fluid">
+
+    <ul class="navbar-nav">
+
+
+      <li class="nav-item" [ngClass]="{'active':clicked1}"><a class="clickable nav-link" (click)="onSelectedProducts()">Home</a></li>
+
+
+      <!-- Dropdown -->
+      <li class="nav-item dropdown" [ngClass]="{'active':clicked2}" *ngIf="authService.isAuthenticated()&&authService.isAdmin() ">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          Admin
+        </a>
+        <div class="dropdown-menu">
+          <a class="clickable dropdown-item" (click)="onGoToProductGestion()">Gestion des Produits</a>
+          <a class="clickable dropdown-item" (click)="onGoToCategoryGestion()">Gestion des Categories</a>
+          <a class="clickable dropdown-item" (click)="onGoToUtilisateurGestion()">Gestion des Utilisateurs</a>
+        </div>
+      </li>
+    </ul>
+
+
+    <ul *ngIf="!this.authService.isAuthenticated()" style="margin-right: 60px" class=" nav navbar-nav pull-right">
+      <li>
+        <a (click)="onLogin()" class="btn nav-link" >
+          <span style="margin-right: 10px">Log in</span>
+          <span class="glyphicon glyphicon-log-in"></span>
+        </a>
+      </li>
+    </ul>
+
+    <ul *ngIf="this.authService.isAuthenticated()" class=" nav navbar-nav pull-right" style="margin-right: 60px">
+
+      <li class="dropdown">
+        <a class="nav-link dropdown-toggle clickable"  data-toggle="dropdown" ><span style="margin-right: 10px">{{authService.authenticatedUser.username}}</span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a (click)="onLogout()" class=" clickable clickable dropdown-item">
+              <span style="margin-right: 10px">Log out</span>
+              <span class="glyphicon glyphicon-log-out"></span>
+            </a>
+          </li>
+          <li><a class="clickable clickable dropdown-item" (click)="onGetProfile()">Your Profile</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+
+
+</nav>
+
+<div class="container">
+  <router-outlet>
+
+  </router-outlet>
+</div>
