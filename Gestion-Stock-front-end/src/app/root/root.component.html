@@ -1,0 +1,17 @@
+
+  <div class="row">
+     <div class="col-md-3">
+       <ul class="list-group" *ngIf="this.catService.listCategories" style="margin-top: 22px">
+         <li [ngClass]="this.catService.currentCategorie==c?'active':''"  (click)="getProductsByCat(c)" class="list-group-item clickable" *ngFor="let c of this.catService.listCategories">
+           {{c.name}}
+         </li>
+       </ul>
+     </div>
+    <div class="col-md-9">
+      <router-outlet>
+
+      </router-outlet>
+    </div>
+  </div>
+
+

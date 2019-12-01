@@ -1,0 +1,15 @@
+
+input.ng-invalid.ng-touched{
+  border: 1px solid red;
+}
+
+.help-block{
+  color: red;
+}
+
+.col-center-block {
+  float: none;
+  display: block;
+  margin: 60px auto;
+  /* margin-left: auto; margin-right: auto; */
+}

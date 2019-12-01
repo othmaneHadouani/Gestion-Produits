@@ -1,0 +1,53 @@
+
+<div class="col-md-6 col-center-block" >
+  <div  class="panel panel-primary " >
+    <div class="panel-heading text-center">
+      Vos Coordonees
+    </div>
+    <div class="panel-body" >
+      <div class="row" style="margin-top: 30px"><div class="col-md-4">UserName : </div><div class="col-md-4">{{authService.authenticatedUser}}</div> <div class="col-md-4"><button type="button" class="btn btn-primary btn-block" (click)="changeToMode1() ">Change UseName</button></div>  </div>
+      <div class="row" style="margin-top: 30px"><div class="col-md-4">PassWord : </div><div class="col-md-4"> <b>********</b> </div> <div class="col-md-4"><button type="button" class="btn btn-primary btn-block" (click)="changeToMode2()">Change Password</button></div>  </div>
+
+      <div style="margin-top: 30px" >
+        <form #f="ngForm" (ngSubmit)="onChangeUsername(f.value)" *ngIf="mode1">
+          <div class=" row">
+            <div class="col-md-4"><label class="control-label">Username:</label></div>
+            <div class="col-md-4">
+              <input type="text" name="username" ngModel class="form-control" required>
+              <span class="help-block" *ngIf="f.controls?.username?.invalid && f.controls?.username?.touched">Veuillez inserer un username valide.</span>
+            </div>
+            <div class="col-md-4">
+              <button type="submit" class="btn btn-success btn-block" [disabled]="!f.valid">Edit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div style="margin-top: 30px" >
+        <form #ff="ngForm" (ngSubmit)="onChangePassword(ff.value)" *ngIf="mode2">
+
+          <div  class="row" >
+            <div class="col-md-4"><label class="control-label" >New Password:</label></div>
+            <div class="col-md-8">
+              <input type="password" class="col-md-4" #password="ngModel" name="password" ngModel class="form-control" required>
+              <span class="help-block" *ngIf="ff.controls?.password?.invalid && ff.controls?.password?.touched">Veuillez inserer un password valide.</span> <!-- we ca remplace ff.controls.password par password -->
+            </div>
+          </div>
+          <div  class="row" style="margin-top: 10px">
+            <div class="col-md-4"><label class="control-label">Confirm Password :</label></div>
+            <div class="col-md-8">
+              <input type="password"  class="col-md-4" name="confirmedPassword" ngModel class="form-control" required>
+              <span class="help-block" *ngIf="ff.controls?.confirmedPassword?.invalid && ff.controls?.confirmedPassword?.touched">Veuillez inserer un password valide.</span>
+              <span class="help-block" *ngIf="compatible">Please entree un password compatible.</span>
+            </div>
+           <div class="col-md-4"></div ><div class="col-md-4"></div> <div class="col-md-4" style="margin-top: 10px"><button type="submit" class="btn btn-success btn-block" [disabled]="!ff.valid">Edit</button></div>
+          </div>
+
+        </form>
+      </div>
+
+
+    </div>
+  </div>
+
+</div>

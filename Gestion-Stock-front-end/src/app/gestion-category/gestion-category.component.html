@@ -1,0 +1,147 @@
+
+
+<div class="row mt-5">
+  <div class="col-3">
+    <button class="btn btn-lg btn-outline-primary " (click)="openAdd(addCategory)">Ajouter Une Categorie</button>
+  </div>
+  <div class="col-4 ">
+    <form class="navbar-form navbar-left" #f="ngForm" (ngSubmit)="doSearch(f.value)">
+      <div class="row">
+        <div class="form-group col-8">
+          <input type="text" class="form-control" name="motCle" #motCle="ngModel" ngModel placeholder="Search">
+        </div>
+        <div class="col-4 pr-0">
+          <button type="submit" class="btn btn-default">Chercher</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="card car mt-3">
+  <div class="card-header text-center "><h6> Categories </h6></div>
+  <div class="panel-body">
+    <table class="table">
+      <thead >
+      <tr class="d-flex">
+        <th scope="col"  class="col-3"></th>
+        <th scope="col"  class="col-3">Name</th>
+        <th scope="col" class="col-3">Description</th>
+        <th scope="col" class="col-3"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let c of this.catService.categories" class="d-flex">
+        <td class="col-3"></td>
+        <td class="col-3">{{c.name}}</td>
+        <td class="col-3">{{c.description}}</td>
+        <td class="col-3">
+          <button type="button" (click)="openDelete(deleteCategory,c.id)" class="btn btn-primary" style="margin-right: 10px">Delete</button>
+          <button type="button" class="btn btn-primary" (click)="openEdit(editCategory,c)">Modifier</button>
+
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="ml-5">
+      <nav>
+        <ul class="pagination">
+          <li [style.display]="this.catService.aboutCategories?.pageable.pageNumber == 0 ? 'none' : 'inline'"><a aria-label="Previous " class="page-link clickable" (click)="this.getPage(motCle,i-1)" ><< Previous</a></li>
+          <li *ngFor="let item of [].constructor(this.catService.aboutCategories?.totalPages); let i = index " class="page-item" [ngClass]="{'active' : this.catService.aboutCategories?.pageable.pageNumber==i}">
+
+            <a class="page-link clickable"  (click)="this.getPage(motCle,i)" > {{i}} </a>
+          </li>
+          <li [style.display]="this.catService.aboutCategories?.pageable.pageNumber == (this.catService.aboutCategories?.totalPages-1) ? 'none' : 'inline'"><a class="page-link clickable" aria-label="Previous" (click)="this.getPage(motCle,i+1)"> Next >></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #addCategory let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title text-center" id="modal-basic-title">Nouvelle Categorie</h6>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form  #formCategory="ngForm">
+      <div class="form-group">
+        <label >Name</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer Le nom de la Categorie" name="name" [(ngModel)]="this.category.name" required>
+        </div>
+        <span class="help-block" *ngIf="formCategory.controls?.name?.errors?.required && formCategory.controls?.name?.touched">Veuillez inserer un Nom valide.</span>
+      </div>
+
+      <div class="form-group">
+        <label >Description</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer La description de la category" name="description" [(ngModel)]="this.category.description" required>
+        </div>
+        <span class="help-block" *ngIf="formCategory.controls?.description?.errors?.required && formCategory.controls?.description?.touched">Veuillez inserer une description valide.</span>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()" [disabled]="!formCategory.valid">Save</button>
+  </div>
+</ng-template>
+
+<ng-template #editCategory let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title text-center">Modifier Produit</h6>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form  #formCategory="ngForm">
+
+      <div class="form-group">
+        <label >Id </label>
+        <div class="input-group">
+          <input type="text" readonly class="form-control"  name="id" [(ngModel)]="this.category.id" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label >Name</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer Le nom de la Category" name="name" [(ngModel)]="this.category.name" required>
+        </div>
+        <span class="help-block" *ngIf="formCategory.controls?.name?.errors?.required && formCategory.controls?.name?.touched">Veuillez inserer un Nom valide.</span>
+      </div>
+
+      <div class="form-group">
+        <label >Description</label>
+        <div class="input-group">
+          <input type="text"  class="form-control" placeholder="Entrer La description de la category" name="description" [(ngModel)]="this.category.description" required>
+        </div>
+        <span class="help-block" *ngIf="formCategory.controls?.description?.errors?.required && formCategory.controls?.description?.touched">Veuillez inserer une description valide.</span>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()" [disabled]="!formCategory.valid">Modifier</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteCategory let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title text-center">Ete vous Sur !!!</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="modal.close()">Oui</button>
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Non</button>
+  </div>
+</ng-template>
