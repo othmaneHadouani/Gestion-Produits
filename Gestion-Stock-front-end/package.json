@@ -23,7 +23,7 @@
     "angular2-jwt": "^0.2.3",
     "bootstrap": "^4.0.0",
     "core-js": "^2.5.4",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jwt-decode": "^2.2.0",
     "rxjs": "~6.3.3",
     "tslib": "^1.10.0",
